@@ -135,23 +135,14 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Button 
                 size="lg" 
-                className="bg-white text-primary hover:bg-white/90 shadow-glow text-lg px-10 py-6 rounded-full font-semibold"
+                className="bg-white text-primary hover:bg-white/90 shadow-glow text-lg px-12 py-6 rounded-full font-semibold transform hover:scale-105 transition-all duration-200"
                 onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <Sparkles className="w-5 h-5 mr-2" />
                 Explore Services
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 text-lg px-10 py-6 rounded-full font-semibold"
-                onClick={() => navigate('/book')}
-              >
-                <Heart className="w-5 h-5 mr-2" />
-                Book Now
               </Button>
             </div>
           </div>

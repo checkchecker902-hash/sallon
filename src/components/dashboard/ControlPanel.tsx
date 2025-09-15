@@ -247,13 +247,28 @@ const ControlPanel = () => {
           <CardTitle className="text-lg">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Button className="w-full justify-start" size="sm">
+          <Button 
+            className="w-full justify-start" 
+            size="sm"
+            onClick={() => window.dispatchEvent(new CustomEvent('openRevenue'))}
+          >
+            <DollarSign className="w-4 h-4 mr-2" />
             View Today's Revenue
           </Button>
-          <Button variant="outline" className="w-full justify-start" size="sm">
+          <Button 
+            variant="outline" 
+            className="w-full justify-start" 
+            size="sm"
+            onClick={() => window.dispatchEvent(new CustomEvent('openNotifications'))}
+          >
             Send Reminder Messages
           </Button>
-          <Button variant="outline" className="w-full justify-start" size="sm">
+          <Button 
+            variant="outline" 
+            className="w-full justify-start" 
+            size="sm"
+            onClick={() => window.dispatchEvent(new CustomEvent('exportData'))}
+          >
             Export Today's Data
           </Button>
         </CardContent>

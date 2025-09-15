@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,9 +26,39 @@ import ScheduleViews from "@/components/dashboard/ScheduleViews";
 import ControlPanel from "@/components/dashboard/ControlPanel";
 import AppointmentsList from "@/components/dashboard/AppointmentsList";
 import ServicesManagement from "@/components/dashboard/ServicesManagement";
+import NotificationPanel from "@/components/dashboard/NotificationPanel";
+import RevenueAnalytics from "@/components/dashboard/RevenueAnalytics";
 
 const OwnerDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showRevenueAnalytics, setShowRevenueAnalytics] = useState(false);
+  const [analyticsType, setAnalyticsType] = useState<'revenue' | 'performance' | 'customers' | 'export' | null>(null);
+  const [isOnBreak, setIsOnBreak] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
+
+  // Listen for custom events from ControlPanel
+  useEffect(() => {
+    const handleOpenNotifications = () => setShowNotifications(true);
+    const handleOpenRevenue = () => {
+      setAnalyticsType('revenue');
+      setShowRevenueAnalytics(true);
+    };
+    const handleExportData = () => {
+      setAnalyticsType('export');
+      setShowRevenueAnalytics(true);
+    };
+
+    window.addEventListener('openNotifications', handleOpenNotifications);
+    window.addEventListener('openRevenue', handleOpenRevenue);
+    window.addEventListener('exportData', handleExportData);
+
+    return () => {
+      window.removeEventListener('openNotifications', handleOpenNotifications);
+      window.removeEventListener('openRevenue', handleOpenRevenue);
+      window.removeEventListener('exportData', handleExportData);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,11 +77,17 @@ const OwnerDashboard = () => {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button size="sm" variant="outline">
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => setShowNotifications(true)}
+              >
                 <Bell className="w-4 h-4 mr-2" />
                 Notifications
               </Button>
-              <Badge variant="secondary">Online</Badge>
+              <Badge variant={isOnline ? "secondary" : "destructive"}>
+                {isOnline ? "Online" : "Offline"}
+              </Badge>
             </div>
           </div>
         </div>
@@ -127,19 +163,46 @@ const OwnerDashboard = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid sm:grid-cols-2 gap-4">
-                      <Button className="h-20 flex flex-col gap-2">
+                      <Button 
+                        className="h-20 flex flex-col gap-2"
+                        onClick={() => {
+                          setAnalyticsType('revenue');
+                          setShowRevenueAnalytics(true);
+                        }}
+                      >
                         <DollarSign className="w-6 h-6" />
                         Monthly Revenue
                       </Button>
-                      <Button className="h-20 flex flex-col gap-2" variant="outline">
+                      <Button 
+                        className="h-20 flex flex-col gap-2" 
+                        variant="outline"
+                        onClick={() => {
+                          setAnalyticsType('performance');
+                          setShowRevenueAnalytics(true);
+                        }}
+                      >
                         <BarChart3 className="w-6 h-6" />
                         Service Performance
                       </Button>
-                      <Button className="h-20 flex flex-col gap-2" variant="outline">
+                      <Button 
+                        className="h-20 flex flex-col gap-2" 
+                        variant="outline"
+                        onClick={() => {
+                          setAnalyticsType('customers');
+                          setShowRevenueAnalytics(true);
+                        }}
+                      >
                         <Users className="w-6 h-6" />
                         Customer Analytics
                       </Button>
-                      <Button className="h-20 flex flex-col gap-2" variant="outline">
+                      <Button 
+                        className="h-20 flex flex-col gap-2" 
+                        variant="outline"
+                        onClick={() => {
+                          setAnalyticsType('export');
+                          setShowRevenueAnalytics(true);
+                        }}
+                      >
                         <Download className="w-6 h-6" />
                         Export Data
                       </Button>
@@ -206,6 +269,18 @@ const OwnerDashboard = () => {
           </div>
         </div>
       </div>
+      
+      {/* Modals */}
+      <NotificationPanel 
+        isOpen={showNotifications} 
+        onClose={() => setShowNotifications(false)} 
+      />
+      
+      <RevenueAnalytics 
+        isOpen={showRevenueAnalytics} 
+        onClose={() => setShowRevenueAnalytics(false)}
+        type={analyticsType}
+      />
     </div>
   );
 };

@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Clock, User, Scissors, Edit, Phone, CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
-import { format, addDays, startOfWeek, addWeeks, subWeeks } from "date-fns";
+import { format, addDays, startOfWeek, addWeeks, subWeeks, subDays } from "date-fns";
 
 const ScheduleViews = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [currentWeek, setCurrentWeek] = useState<Date>(new Date());
+  const [viewingDate, setViewingDate] = useState<Date>(new Date());
 
   // Mock appointments data - would come from backend
   const appointments = [
@@ -80,11 +81,27 @@ const ScheduleViews = () => {
 
   const todayStr = format(new Date(), "yyyy-MM-dd");
   const tomorrowStr = format(addDays(new Date(), 1), "yyyy-MM-dd");
+  const yesterdayStr = format(subDays(new Date(), 1), "yyyy-MM-dd");
   const selectedDateStr = format(selectedDate, "yyyy-MM-dd");
+  const viewingDateStr = format(viewingDate, "yyyy-MM-dd");
 
   const todaysAppointments = getAppointmentsForDate(todayStr);
   const tomorrowsAppointments = getAppointmentsForDate(tomorrowStr);
+  const yesterdaysAppointments = getAppointmentsForDate(yesterdayStr);
   const selectedDateAppointments = getAppointmentsForDate(selectedDateStr);
+  const viewingDateAppointments = getAppointmentsForDate(viewingDateStr);
+
+  const navigateDay = (direction: 'prev' | 'next') => {
+    setViewingDate(prev => direction === 'next' ? addDays(prev, 1) : subDays(prev, 1));
+  };
+
+  const getDateLabel = (date: Date) => {
+    const dateStr = format(date, "yyyy-MM-dd");
+    if (dateStr === todayStr) return "Today";
+    if (dateStr === tomorrowStr) return "Tomorrow";
+    if (dateStr === yesterdayStr) return "Yesterday";
+    return format(date, "EEEE, MMM d");
+  };
 
   return (
     <div className="space-y-6">
@@ -95,7 +112,104 @@ const ScheduleViews = () => {
         </TabsList>
 
         <TabsContent value="timeline" className="space-y-4">
-          {/* Today's Schedule */}
+          {/* Navigation Schedule */}
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5" />
+                  {getDateLabel(viewingDate)} Schedule
+                  <Badge variant="secondary">
+                    {viewingDateAppointments.length} appointments
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => navigateDay('prev')}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setViewingDate(new Date())}
+                    disabled={format(viewingDate, "yyyy-MM-dd") === todayStr}
+                  >
+                    Today
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => navigateDay('next')}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {viewingDateAppointments.map((appointment) => (
+                  <div 
+                    key={appointment.id}
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="text-sm font-mono bg-muted px-3 py-1 rounded">
+                        {appointment.time}
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <User className="w-4 h-4 text-muted-foreground" />
+                          <span className="font-medium">{appointment.customer}</span>
+                          <Badge className={`text-xs ${getStatusColor(appointment.status)}`}>
+                            {appointment.status}
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Scissors className="w-3 h-3" />
+                            {appointment.service}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {appointment.duration}min
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <User className="w-3 h-3" />
+                            {appointment.worker}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <Button size="sm" variant="ghost">
+                        <Phone className="w-4 h-4" />
+                      </Button>
+                      <Button size="sm" variant="ghost">
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                
+                {viewingDateAppointments.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No appointments scheduled for {getDateLabel(viewingDate).toLowerCase()}</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Today's Schedule - Always visible */}
           <Card className="shadow-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -159,63 +273,6 @@ const ScheduleViews = () => {
                   <div className="text-center py-8 text-muted-foreground">
                     <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>No appointments scheduled for today</p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tomorrow's Schedule */}
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarDays className="w-5 h-5" />
-                Tomorrow's Schedule
-                <Badge variant="outline" className="ml-auto">
-                  {tomorrowsAppointments.length} appointments
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {tomorrowsAppointments.map((appointment) => (
-                  <div 
-                    key={appointment.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-sm font-mono bg-muted px-3 py-1 rounded">
-                        {appointment.time}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <User className="w-4 h-4 text-muted-foreground" />
-                          <span className="font-medium">{appointment.customer}</span>
-                          <Badge className={`text-xs ${getStatusColor(appointment.status)}`}>
-                            {appointment.status}
-                          </Badge>
-                        </div>
-                        
-                        <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Scissors className="w-3 h-3" />
-                            {appointment.service}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {appointment.duration}min
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {tomorrowsAppointments.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <CalendarDays className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No appointments scheduled for tomorrow</p>
                   </div>
                 )}
               </div>
