@@ -13,13 +13,25 @@ import {
   Clock,
   Settings,
   Calendar,
-  Zap
+  Zap,
+  CalendarX
 } from "lucide-react";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const ControlPanel = () => {
   const [isOnBreak, setIsOnBreak] = useState(false);
   const [prepaymentRequired, setPrepaymentRequired] = useState(true);
   const [servicesDisabled, setServicesDisabled] = useState<string[]>([]);
+  const [blockedDates, setBlockedDates] = useState<Date[]>([]);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   const services = [
     { id: 'mens-haircut', name: "Men's Haircut", price: 35, duration: 45 },
@@ -34,6 +46,23 @@ const ControlPanel = () => {
         ? prev.filter(id => id !== serviceId)
         : [...prev, serviceId]
     );
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (!date) return;
+    
+    setBlockedDates(prev => {
+      const dateExists = prev.some(d => d.toDateString() === date.toDateString());
+      if (dateExists) {
+        return prev.filter(d => d.toDateString() !== date.toDateString());
+      } else {
+        return [...prev, date];
+      }
+    });
+  };
+
+  const isDateBlocked = (date: Date) => {
+    return blockedDates.some(d => d.toDateString() === date.toDateString());
   };
 
   return (
@@ -90,14 +119,80 @@ const ControlPanel = () => {
             Night Mode (Close Early)
           </Button>
           
-          {/* Block Day */}
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-          >
-            <Calendar className="w-4 h-4 mr-2" />
-            Block Date
-          </Button>
+          {/* Block Days */}
+          <Dialog open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+              >
+                <CalendarX className="w-4 h-4 mr-2" />
+                Booking OFF Days
+                {blockedDates.length > 0 && (
+                  <Badge variant="secondary" className="ml-auto">
+                    {blockedDates.length}
+                  </Badge>
+                )}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Block Booking Days</DialogTitle>
+                <DialogDescription>
+                  Select dates when you want to block all bookings. Click dates to toggle blocking.
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-4">
+                <CalendarComponent
+                  mode="single"
+                  onSelect={handleDateSelect}
+                  className="rounded-md border"
+                  modifiers={{
+                    blocked: isDateBlocked
+                  }}
+                  modifiersStyles={{
+                    blocked: { 
+                      backgroundColor: 'hsl(var(--destructive))',
+                      color: 'hsl(var(--destructive-foreground))',
+                      fontWeight: 'bold'
+                    }
+                  }}
+                />
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="w-4 h-4 bg-destructive rounded"></div>
+                    <span>Blocked Days ({blockedDates.length})</span>
+                  </div>
+                  
+                  {blockedDates.length > 0 && (
+                    <div className="max-h-32 overflow-y-auto">
+                      {blockedDates.map((date, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-muted rounded text-sm">
+                          <span>{date.toLocaleDateString()}</span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDateSelect(date)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                <Button 
+                  onClick={() => setIsDatePickerOpen(false)}
+                  className="w-full"
+                >
+                  Done
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
 

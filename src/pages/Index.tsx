@@ -101,7 +101,7 @@ const Index = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate("/owner/login")}
+              onClick={() => navigate("/owner")}
               className="text-muted-foreground hover:text-primary"
             >
               Staff Login
@@ -111,23 +111,97 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-hero text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6">
+      <section className="bg-gradient-hero text-white py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-6xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
               Book Your Perfect Look
             </h2>
-            <p className="text-xl md:text-2xl mb-8 text-white/90">
+            <p className="text-xl md:text-2xl mb-12 text-white/90 leading-relaxed">
               Professional salon services with expert stylists. Experience luxury and style in our modern salon.
             </p>
-            <Button 
-              size="lg" 
-              className="bg-white text-primary hover:bg-white/90 shadow-glow text-lg px-8 py-6"
-              onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              <Sparkles className="w-5 h-5 mr-2" />
-              Explore Services
-            </Button>
+            
+            {/* Customer Reviews Preview */}
+            <div className="flex items-center justify-center gap-6 mb-12 bg-white/10 backdrop-blur-sm rounded-full py-4 px-8 max-w-md mx-auto">
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 fill-accent text-accent" />
+                ))}
+              </div>
+              <div className="text-white">
+                <p className="text-lg font-semibold">4.9/5</p>
+                <p className="text-sm opacity-90">500+ Reviews</p>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90 shadow-glow text-lg px-10 py-6 rounded-full font-semibold"
+                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                <Sparkles className="w-5 h-5 mr-2" />
+                Explore Services
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-white/30 text-white hover:bg-white/10 text-lg px-10 py-6 rounded-full font-semibold"
+                onClick={() => navigate('/book')}
+              >
+                <Heart className="w-5 h-5 mr-2" />
+                Book Now
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-primary mb-4">What Our Clients Say</h3>
+            <div className="flex items-center justify-center gap-2 mb-8">
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-6 h-6 fill-accent text-accent" />
+                ))}
+              </div>
+              <span className="text-2xl font-bold text-primary ml-2">4.9</span>
+              <span className="text-muted-foreground">from 500+ reviews</span>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: "Sarah Johnson",
+                rating: 5,
+                comment: "Amazing service! The stylists are incredibly skilled and the atmosphere is so relaxing. I always leave feeling like a new person!"
+              },
+              {
+                name: "Mike Chen", 
+                rating: 5,
+                comment: "Best haircut I've had in years. Professional, friendly, and great attention to detail. The online booking system is so convenient too."
+              },
+              {
+                name: "Emma Davis",
+                rating: 5,
+                comment: "Love this salon! Easy booking system and always leave feeling fantastic. The staff really listens to what you want."
+              }
+            ].map((review, index) => (
+              <div key={index} className="bg-card p-6 rounded-xl shadow-card transform hover:scale-105 transition-all duration-300">
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-accent text-accent" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4 italic">"{review.comment}"</p>
+                <p className="font-semibold text-primary">— {review.name}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -185,42 +259,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-center text-primary mb-12">What Our Clients Say</h3>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                name: "Sarah Johnson",
-                rating: 5,
-                comment: "Amazing service! The stylists are incredibly skilled and the atmosphere is so relaxing."
-              },
-              {
-                name: "Mike Chen", 
-                rating: 5,
-                comment: "Best haircut I've had in years. Professional, friendly, and great attention to detail."
-              },
-              {
-                name: "Emma Davis",
-                rating: 5,
-                comment: "Love this salon! Easy booking system and always leave feeling fantastic."
-              }
-            ].map((review, index) => (
-              <div key={index} className="bg-card p-6 rounded-xl shadow-card">
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-accent text-accent" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-4">"{review.comment}"</p>
-                <p className="font-semibold text-primary">- {review.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-12">

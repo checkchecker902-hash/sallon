@@ -22,7 +22,7 @@ import {
   Bell
 } from "lucide-react";
 import DashboardStats from "@/components/dashboard/DashboardStats";
-import TodaysSchedule from "@/components/dashboard/TodaysSchedule";
+import ScheduleViews from "@/components/dashboard/ScheduleViews";
 import ControlPanel from "@/components/dashboard/ControlPanel";
 import AppointmentsList from "@/components/dashboard/AppointmentsList";
 import ServicesManagement from "@/components/dashboard/ServicesManagement";
@@ -77,7 +77,7 @@ const OwnerDashboard = () => {
               </TabsList>
 
               <TabsContent value="overview" className="space-y-6">
-                <TodaysSchedule />
+                <ScheduleViews />
                 
                 {/* Recent Activity */}
                 <Card>
