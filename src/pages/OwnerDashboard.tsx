@@ -28,6 +28,7 @@ import AppointmentsList from "@/components/dashboard/AppointmentsList";
 import ServicesManagement from "@/components/dashboard/ServicesManagement";
 import NotificationPanel from "@/components/dashboard/NotificationPanel";
 import RevenueAnalytics from "@/components/dashboard/RevenueAnalytics";
+import BusinessSettings from "@/components/dashboard/BusinessSettings";
 
 const OwnerDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -36,6 +37,8 @@ const OwnerDashboard = () => {
   const [analyticsType, setAnalyticsType] = useState<'revenue' | 'performance' | 'customers' | 'export' | null>(null);
   const [isOnBreak, setIsOnBreak] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [showBusinessSettings, setShowBusinessSettings] = useState(false);
+  const [businessSettingType, setBusinessSettingType] = useState<'hours' | 'payment' | 'staff' | null>(null);
 
   // Listen for custom events from ControlPanel
   useEffect(() => {
@@ -221,7 +224,14 @@ const OwnerDashboard = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid gap-4">
-                      <Button variant="outline" className="justify-start h-auto py-4">
+                      <Button 
+                        variant="outline" 
+                        className="justify-start h-auto py-4"
+                        onClick={() => {
+                          setBusinessSettingType('hours');
+                          setShowBusinessSettings(true);
+                        }}
+                      >
                         <div className="flex flex-col items-start">
                           <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
@@ -233,7 +243,14 @@ const OwnerDashboard = () => {
                         </div>
                       </Button>
                       
-                      <Button variant="outline" className="justify-start h-auto py-4">
+                      <Button 
+                        variant="outline" 
+                        className="justify-start h-auto py-4"
+                        onClick={() => {
+                          setBusinessSettingType('payment');
+                          setShowBusinessSettings(true);
+                        }}
+                      >
                         <div className="flex flex-col items-start">
                           <div className="flex items-center gap-2">
                             <CreditCard className="w-4 h-4" />
@@ -245,7 +262,14 @@ const OwnerDashboard = () => {
                         </div>
                       </Button>
                       
-                      <Button variant="outline" className="justify-start h-auto py-4">
+                      <Button 
+                        variant="outline" 
+                        className="justify-start h-auto py-4"
+                        onClick={() => {
+                          setBusinessSettingType('staff');
+                          setShowBusinessSettings(true);
+                        }}
+                      >
                         <div className="flex flex-col items-start">
                           <div className="flex items-center gap-2">
                             <Users className="w-4 h-4" />
@@ -280,6 +304,12 @@ const OwnerDashboard = () => {
         isOpen={showRevenueAnalytics} 
         onClose={() => setShowRevenueAnalytics(false)}
         type={analyticsType}
+      />
+      
+      <BusinessSettings 
+        isOpen={showBusinessSettings} 
+        onClose={() => setShowBusinessSettings(false)}
+        settingType={businessSettingType}
       />
     </div>
   );
