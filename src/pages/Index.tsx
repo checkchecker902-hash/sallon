@@ -114,54 +114,124 @@ const Index = () => {
       <section className="bg-gradient-hero text-white py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-6xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              Book Your Perfect Look
+          <div className="max-w-5xl mx-auto">
+            
+            {/* Trust Indicators */}
+            <div className="flex items-center justify-center gap-8 mb-8 text-white/90">
+              <div className="flex items-center gap-2">
+                <div className="bg-accent/20 rounded-full p-2">
+                  <Users className="w-5 h-5 text-accent" />
+                </div>
+                <span className="text-sm font-medium">15+ Expert Stylists</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="bg-accent/20 rounded-full p-2">
+                  <Heart className="w-5 h-5 text-accent" />
+                </div>
+                <span className="text-sm font-medium">5000+ Happy Clients</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="bg-accent/20 rounded-full p-2">
+                  <Sparkles className="w-5 h-5 text-accent" />
+                </div>
+                <span className="text-sm font-medium">12 Years Experience</span>
+              </div>
+            </div>
+
+            <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent leading-tight">
+              Transform Your Look Today
             </h2>
-            <p className="text-xl md:text-2xl mb-12 text-white/90 leading-relaxed">
-              Professional salon services with expert stylists. Experience luxury and style in our modern salon.
+            <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed max-w-3xl mx-auto">
+              Walk in ordinary, walk out <span className="text-accent font-semibold">extraordinary</span>. 
+              Our award-winning stylists create the confidence-boosting look you deserve.
             </p>
             
-            {/* Customer Reviews Preview */}
-            <div className="flex items-center justify-center gap-6 mb-12 bg-white/10 backdrop-blur-sm rounded-full py-4 px-8 max-w-md mx-auto">
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                ))}
+            {/* Urgency & Social Proof */}
+            <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 mb-8 max-w-2xl mx-auto">
+              <div className="flex items-center justify-center gap-8 mb-4">
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-accent text-accent" />
+                  ))}
+                </div>
+                <div className="text-white">
+                  <p className="text-lg font-semibold">4.9/5 Rating</p>
+                  <p className="text-sm opacity-90">500+ Google Reviews</p>
+                </div>
               </div>
-              <div className="text-white">
-                <p className="text-lg font-semibold">4.9/5</p>
-                <p className="text-sm opacity-90">500+ Reviews</p>
+              <div className="text-accent font-medium text-lg mb-2">
+                🔥 87% of today's slots already booked!
+              </div>
+              <div className="text-white/90 text-sm">
+                ✅ 100% Satisfaction Guarantee • ✅ Same-Day Bookings Available
               </div>
             </div>
             
-            <div className="flex justify-center">
+            {/* Dual CTA */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button 
                 size="lg" 
-                className="bg-white text-primary hover:bg-white/90 shadow-glow text-lg px-12 py-6 rounded-full font-semibold transform hover:scale-105 transition-all duration-200"
+                className="bg-accent text-white hover:bg-accent/90 shadow-glow text-lg px-12 py-6 rounded-full font-semibold transform hover:scale-105 transition-all duration-200"
                 onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <Sparkles className="w-5 h-5 mr-2" />
-                Explore Services
+                Book Your Transformation
               </Button>
+              <div className="flex items-center gap-2 text-white/90">
+                <Phone className="w-5 h-5" />
+                <span className="text-lg font-medium">Call Now: (555) 123-4567</span>
+              </div>
+            </div>
+
+            {/* Limited Time Offer */}
+            <div className="mt-8 bg-accent/20 border border-accent/30 rounded-xl p-4 max-w-md mx-auto">
+              <div className="text-accent font-bold text-sm mb-1">⏰ LIMITED TIME OFFER</div>
+              <div className="text-white text-lg font-semibold">20% OFF First Visit</div>
+              <div className="text-white/80 text-sm">New clients only • Expires in 7 days</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Social Proof & Testimonials Section */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
+          
+          {/* Awards & Recognition */}
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-primary mb-4">What Our Clients Say</h3>
+            <div className="flex items-center justify-center gap-8 mb-8">
+              <div className="text-center">
+                <div className="bg-accent/10 rounded-full p-4 mx-auto mb-2 w-16 h-16 flex items-center justify-center">
+                  <Sparkles className="w-8 h-8 text-accent" />
+                </div>
+                <div className="text-sm font-semibold text-primary">Best Salon 2024</div>
+                <div className="text-xs text-muted-foreground">City Awards</div>
+              </div>
+              <div className="text-center">
+                <div className="bg-accent/10 rounded-full p-4 mx-auto mb-2 w-16 h-16 flex items-center justify-center">
+                  <Heart className="w-8 h-8 text-accent" />
+                </div>
+                <div className="text-sm font-semibold text-primary">5000+ Happy</div>
+                <div className="text-xs text-muted-foreground">Customers</div>
+              </div>
+              <div className="text-center">
+                <div className="bg-accent/10 rounded-full p-4 mx-auto mb-2 w-16 h-16 flex items-center justify-center">
+                  <Users className="w-8 h-8 text-accent" />
+                </div>
+                <div className="text-sm font-semibold text-primary">Licensed</div>
+                <div className="text-xs text-muted-foreground">Professionals</div>
+              </div>
+            </div>
+
+            <h3 className="text-4xl font-bold text-primary mb-4">Transformations Our Clients Love</h3>
             <div className="flex items-center justify-center gap-2 mb-8">
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-6 h-6 fill-accent text-accent" />
                 ))}
               </div>
-              <span className="text-2xl font-bold text-primary ml-2">4.9</span>
-              <span className="text-muted-foreground">from 500+ reviews</span>
+              <span className="text-3xl font-bold text-primary ml-2">4.9</span>
+              <span className="text-muted-foreground text-lg">from 500+ Google reviews</span>
             </div>
           </div>
           
@@ -170,27 +240,42 @@ const Index = () => {
               {
                 name: "Sarah Johnson",
                 rating: 5,
-                comment: "Amazing service! The stylists are incredibly skilled and the atmosphere is so relaxing. I always leave feeling like a new person!"
+                comment: "I walked in feeling invisible and walked out feeling like a QUEEN! The transformation was incredible - I've never felt more confident. Worth every penny!",
+                service: "Hair Color & Highlights",
+                beforeAfter: "Confidence Level: 3/10 → 11/10"
               },
               {
                 name: "Mike Chen", 
                 rating: 5,
-                comment: "Best haircut I've had in years. Professional, friendly, and great attention to detail. The online booking system is so convenient too."
+                comment: "As a CEO, image matters. Elite Salon transformed my look and boosted my executive presence. Clients notice the difference. Game changer!",
+                service: "Men's Executive Cut",
+                beforeAfter: "Professional Impact: Doubled"
               },
               {
                 name: "Emma Davis",
                 rating: 5,
-                comment: "Love this salon! Easy booking system and always leave feeling fantastic. The staff really listens to what you want."
+                comment: "After my divorce, I needed a fresh start. The stylists here didn't just change my hair - they changed my life. I feel like ME again!",
+                service: "Complete Makeover",
+                beforeAfter: "Self-Esteem: Completely Renewed"
               }
             ].map((review, index) => (
-              <div key={index} className="bg-card p-6 rounded-xl shadow-card transform hover:scale-105 transition-all duration-300">
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-accent text-accent" />
-                  ))}
+              <div key={index} className="bg-card p-8 rounded-xl shadow-card transform hover:scale-105 transition-all duration-300 border-l-4 border-accent">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-1">
+                    {[...Array(review.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-accent text-accent" />
+                    ))}
+                  </div>
+                  <div className="text-xs text-accent font-semibold bg-accent/10 px-2 py-1 rounded-full">
+                    VERIFIED REVIEW
+                  </div>
                 </div>
-                <p className="text-muted-foreground mb-4 italic">"{review.comment}"</p>
-                <p className="font-semibold text-primary">— {review.name}</p>
+                <p className="text-foreground mb-4 font-medium text-lg leading-relaxed">"{review.comment}"</p>
+                <div className="border-t pt-4">
+                  <p className="font-bold text-primary text-lg">— {review.name}</p>
+                  <p className="text-sm text-muted-foreground">Service: {review.service}</p>
+                  <p className="text-sm text-accent font-medium mt-1">{review.beforeAfter}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -198,12 +283,15 @@ const Index = () => {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-16">
+      <section id="services" className="py-16 bg-muted/20">
         <div className="container mx-auto px-4">
           
           {/* Search and Filter */}
           <div className="max-w-4xl mx-auto mb-12">
-            <h3 className="text-3xl font-bold text-center text-primary mb-8">Our Services</h3>
+            <div className="text-center mb-8">
+              <h3 className="text-4xl font-bold text-primary mb-4">Popular Services</h3>
+              <p className="text-muted-foreground text-lg">Trending now • Most booked this week</p>
+            </div>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <div className="relative flex-1">
