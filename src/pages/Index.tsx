@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import ServiceCard from "@/components/ServiceCard";
-import { Search, Scissors, Users, Heart, Sparkles, MapPin, Phone, Mail, Star } from "lucide-react";
+import { Search, Scissors, Users, Heart, Sparkles, MapPin, Phone, Mail, Star, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -177,10 +177,19 @@ const Index = () => {
                 <Sparkles className="w-5 h-5 mr-2" />
                 Book Your Transformation
               </Button>
-              <div className="flex items-center gap-2 text-white/90">
-                <Phone className="w-5 h-5" />
-                <span className="text-lg font-medium">Call Now: (555) 123-4567</span>
-              </div>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white/20 text-lg px-12 py-6 rounded-full font-semibold transform hover:scale-105 transition-all duration-200"
+                onClick={() => navigate("/appointment")}
+              >
+                <UserCheck className="w-5 h-5 mr-2" />
+                Schedule Appointment
+              </Button>
+            </div>
+            <div className="flex items-center justify-center gap-2 text-white/90 mt-4">
+              <Phone className="w-5 h-5" />
+              <span className="text-lg font-medium">Call Now: (555) 123-4567</span>
             </div>
 
             {/* Limited Time Offer */}

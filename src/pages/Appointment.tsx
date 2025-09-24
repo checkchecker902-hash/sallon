@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,14 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import { ArrowLeft, Clock, DollarSign, User, Phone, Mail, MessageSquare } from "lucide-react";
+import { ArrowLeft, Clock, DollarSign, User, Phone, Mail, MessageSquare, UserCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import ServiceSelector, { Service } from "@/components/ServiceSelector";
 
-const Booking = () => {
-  const [searchParams] = useSearchParams();
+const Appointment = () => {
   const navigate = useNavigate();
-  const serviceId = searchParams.get("service");
   
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -44,11 +42,10 @@ const Booking = () => {
   };
 
   const timeSlots = generateTimeSlots();
-
   const totalPrice = selectedServices.reduce((sum, service) => sum + service.price, 0);
   const totalDuration = selectedServices.reduce((sum, service) => sum + service.duration, 0);
 
-  const handleConfirmBooking = () => {
+  const handleConfirmAppointment = () => {
     if (selectedServices.length === 0) {
       toast({
         title: "No Services Selected",
@@ -60,24 +57,23 @@ const Booking = () => {
     
     if (!selectedDate || !selectedTime || !customerData.name || !customerData.phone) {
       toast({
-        title: "Missing Information",
+        title: "Missing Information", 
         description: "Please fill in all required fields",
         variant: "destructive"
       });
       return;
     }
 
-    // Mock booking confirmation
+    // Mock appointment confirmation
     const serviceNames = selectedServices.map(s => s.name).join(", ");
     toast({
-      title: "Booking Confirmed!",
-      description: `Your appointment for ${serviceNames} has been booked for ${selectedDate.toLocaleDateString()} at ${selectedTime}`,
+      title: "Appointment Scheduled!",
+      description: `Your appointment for ${serviceNames} has been scheduled for ${selectedDate.toLocaleDateString()} at ${selectedTime}`,
     });
 
-    // Navigate to confirmation page or home
+    // Navigate to home
     navigate("/");
   };
-
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -94,16 +90,37 @@ const Booking = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <h1 className="text-3xl font-bold text-primary">Book Your Appointment</h1>
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-hero rounded-full p-2">
+              <UserCheck className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-primary">Schedule Appointment</h1>
+          </div>
+        </div>
+
+        {/* Welcome message for regular customers */}
+        <div className="mb-8">
+          <Card className="bg-gradient-card border-primary/20">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <UserCheck className="w-5 h-5 text-primary" />
+                <h2 className="text-lg font-semibold text-primary">Welcome Back!</h2>
+              </div>
+              <p className="text-muted-foreground">
+                Book your next appointment quickly and easily. Select multiple services if needed, 
+                choose your preferred date and time, and we'll take care of the rest.
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           
-          {/* Booking Summary */}
+          {/* Appointment Summary */}
           <div className="lg:col-span-1">
             <Card className="sticky top-8 shadow-card">
               <CardHeader>
-                <CardTitle className="text-lg">Booking Summary</CardTitle>
+                <CardTitle className="text-lg">Appointment Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {selectedServices.length > 0 ? (
@@ -148,21 +165,20 @@ const Booking = () => {
                   </>
                 ) : (
                   <p className="text-muted-foreground text-center py-8">
-                    Select services to see booking summary
+                    Select services to see appointment summary
                   </p>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Booking Form */}
+          {/* Appointment Form */}
           <div className="lg:col-span-2 space-y-8">
             
             {/* Service Selection */}
             <ServiceSelector 
               selectedServices={selectedServices}
               onServicesChange={setSelectedServices}
-              initialServiceId={serviceId || undefined}
             />
             
             {/* Date Selection */}
@@ -174,16 +190,16 @@ const Booking = () => {
                     Select Date
                   </CardTitle>
                 </CardHeader>
-              <CardContent>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  disabled={(date) => date < new Date() || date.getDay() === 0} // Disable past dates and Sundays
-                  className="rounded-md border-0"
-                />
-              </CardContent>
-            </Card>
+                <CardContent>
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    disabled={(date) => date < new Date() || date.getDay() === 0} // Disable past dates and Sundays
+                    className="rounded-md border-0"
+                  />
+                </CardContent>
+              </Card>
             )}
 
             {/* Time Selection */}
@@ -283,11 +299,12 @@ const Booking = () => {
                   </div>
                   
                   <Button
-                    onClick={handleConfirmBooking}
+                    onClick={handleConfirmAppointment}
                     className="w-full bg-gradient-hero hover:shadow-glow transition-all duration-300"
                     size="lg"
                   >
-                    Confirm Booking
+                    <UserCheck className="w-4 h-4 mr-2" />
+                    Schedule Appointment
                   </Button>
                 </CardContent>
               </Card>
@@ -299,4 +316,4 @@ const Booking = () => {
   );
 };
 
-export default Booking;
+export default Appointment;
