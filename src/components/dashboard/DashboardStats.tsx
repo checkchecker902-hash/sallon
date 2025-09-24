@@ -1,32 +1,39 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Calendar, Users, TrendingUp, Clock, CreditCard } from "lucide-react";
+import { useAppointments } from "@/contexts/AppointmentContext";
 
 const DashboardStats = () => {
+  const { todaysAppointments, appointments } = useAppointments();
+  
+  // Calculate real-time stats
+  const todaysRevenue = todaysAppointments.reduce((sum, apt) => sum + apt.totalPrice, 0);
+  const todaysBookings = todaysAppointments.length;
+  
   const stats = [
     {
       title: "Today's Revenue",
-      value: "$485",
+      value: `$${todaysRevenue}`,
       change: "+12%",
       icon: DollarSign,
       trend: "up"
     },
     {
       title: "Today's Bookings",
-      value: "23",
+      value: todaysBookings.toString(),
       change: "+3",
       icon: Calendar,
       trend: "up"
     },
     {
-      title: "Active Customers", 
-      value: "156",
+      title: "Total Appointments", 
+      value: appointments.length.toString(),
       change: "+8%",
       icon: Users,
       trend: "up"
     },
     {
       title: "Avg. Service Time",
-      value: "42min",
+      value: `${Math.round(todaysAppointments.reduce((sum, apt) => sum + apt.totalDuration, 0) / (todaysAppointments.length || 1))}min`,
       change: "-5min",
       icon: Clock,
       trend: "down"

@@ -22,46 +22,16 @@ import {
   Image,
   Save
 } from "lucide-react";
+import { useServices } from "@/contexts/ServicesContext";
 
 const ServicesManagement = () => {
-  const [services, setServices] = useState([
-    {
-      id: 'mens-haircut',
-      name: "Men's Haircut & Style",
-      price: 35,
-      duration: 45,
-      category: "Men's Services",
-      active: true,
-      imageURL: "/src/assets/mens-haircut.jpg"
-    },
-    {
-      id: 'womens-haircut',
-      name: "Women's Haircut & Style",
-      price: 55,
-      duration: 60,
-      category: "Women's Services",
-      active: true,
-      imageURL: "/src/assets/womens-haircut.jpg"
-    },
-    {
-      id: 'beard-trim',
-      name: "Beard Trim & Shape",
-      price: 25,
-      duration: 30,
-      category: "Men's Services",
-      active: true,
-      imageURL: "/src/assets/beard-service.jpg"
-    },
-    {
-      id: 'spa-treatment',
-      name: "Relaxing Spa Treatment",
-      price: 85,
-      duration: 90,
-      category: "Spa Services",
-      active: false,
-      imageURL: "/src/assets/spa-service.jpg"
-    }
-  ]);
+  const { 
+    services, 
+    addService, 
+    updateService, 
+    deleteService, 
+    toggleServiceActive 
+  } = useServices();
 
   const [editingService, setEditingService] = useState<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -75,11 +45,12 @@ const ServicesManagement = () => {
     setEditingService({
       id: '',
       name: '',
+      description: '',
       price: 0,
       duration: 30,
-      category: "Men's Services",
+      category: "Men",
       active: true,
-      imageURL: ''
+      image: ''
     });
     setIsDialogOpen(true);
   };
@@ -87,26 +58,21 @@ const ServicesManagement = () => {
   const handleSaveService = () => {
     if (editingService.id && services.find(s => s.id === editingService.id)) {
       // Update existing service
-      setServices(services.map(s => 
-        s.id === editingService.id ? editingService : s
-      ));
+      updateService(editingService.id, editingService);
     } else {
       // Add new service
-      const newId = editingService.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-      setServices([...services, { ...editingService, id: newId }]);
+      addService(editingService);
     }
     setIsDialogOpen(false);
     setEditingService(null);
   };
 
   const handleDeleteService = (serviceId: string) => {
-    setServices(services.filter(s => s.id !== serviceId));
+    deleteService(serviceId);
   };
 
-  const toggleServiceActive = (serviceId: string) => {
-    setServices(services.map(s => 
-      s.id === serviceId ? { ...s, active: !s.active } : s
-    ));
+  const handleToggleServiceActive = (serviceId: string) => {
+    toggleServiceActive(serviceId);
   };
 
   return (
@@ -145,6 +111,19 @@ const ServicesManagement = () => {
                         name: e.target.value
                       })}
                       placeholder="e.g., Premium Haircut"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="service-description">Description</Label>
+                    <Input
+                      id="service-description"
+                      value={editingService.description || ''}
+                      onChange={(e) => setEditingService({
+                        ...editingService,
+                        description: e.target.value
+                      })}
+                      placeholder="Brief description of the service"
                     />
                   </div>
                   
@@ -253,7 +232,7 @@ const ServicesManagement = () => {
                 <div className="flex items-center gap-2">
                   <Switch
                     checked={service.active}
-                    onCheckedChange={() => toggleServiceActive(service.id)}
+                    onCheckedChange={() => handleToggleServiceActive(service.id)}
                   />
                   
                   <Button 

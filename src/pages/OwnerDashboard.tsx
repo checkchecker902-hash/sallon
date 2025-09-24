@@ -29,6 +29,7 @@ import ServicesManagement from "@/components/dashboard/ServicesManagement";
 import NotificationPanel from "@/components/dashboard/NotificationPanel";
 import RevenueAnalytics from "@/components/dashboard/RevenueAnalytics";
 import BusinessSettings from "@/components/dashboard/BusinessSettings";
+import { useAppointments } from "@/contexts/AppointmentContext";
 
 const OwnerDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -39,6 +40,7 @@ const OwnerDashboard = () => {
   const [isOnline, setIsOnline] = useState(true);
   const [showBusinessSettings, setShowBusinessSettings] = useState(false);
   const [businessSettingType, setBusinessSettingType] = useState<'hours' | 'payment' | 'staff' | null>(null);
+  const { pendingAppointments, todaysAppointments } = useAppointments();
 
   // Listen for custom events from ControlPanel
   useEffect(() => {
@@ -124,25 +126,31 @@ const OwnerDashboard = () => {
                     <CardTitle className="flex items-center gap-2">
                       <Clock className="w-5 h-5" />
                       Recent Activity
+                      {pendingAppointments.length > 0 && (
+                        <Badge variant="destructive" className="ml-auto">
+                          {pendingAppointments.length} pending
+                        </Badge>
+                      )}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {[
-                        { action: "New booking", customer: "John Smith", service: "Men's Haircut", time: "2 minutes ago" },
-                        { action: "Cancellation", customer: "Sarah Johnson", service: "Women's Haircut", time: "15 minutes ago" },
-                        { action: "Payment received", customer: "Mike Brown", service: "Beard Trim", time: "1 hour ago" }
-                      ].map((activity, index) => (
-                        <div key={index} className="flex items-center justify-between py-2 border-b last:border-b-0">
+                      {pendingAppointments.slice(0, 3).map((appointment) => (
+                        <div key={appointment.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
                           <div>
-                            <p className="font-medium">{activity.action}</p>
+                            <p className="font-medium">New booking from {appointment.source}</p>
                             <p className="text-sm text-muted-foreground">
-                              {activity.customer} - {activity.service}
+                              {appointment.customer.name} - {appointment.services.map(s => s.name).join(", ")}
                             </p>
                           </div>
-                          <span className="text-xs text-muted-foreground">{activity.time}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(appointment.createdAt).toLocaleTimeString()}
+                          </span>
                         </div>
                       ))}
+                      {pendingAppointments.length === 0 && (
+                        <p className="text-muted-foreground text-center py-4">No recent activity</p>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

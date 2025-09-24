@@ -22,78 +22,13 @@ import {
   User,
   DollarSign
 } from "lucide-react";
+import { useAppointments } from "@/contexts/AppointmentContext";
 
 const AppointmentsList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
-
-  const appointments = [
-    {
-      id: "APP001",
-      date: "2024-12-20",
-      time: "09:00",
-      customer: {
-        name: "John Smith",
-        phone: "+1-234-567-8901",
-        email: "john@example.com"
-      },
-      service: "Men's Haircut & Style",
-      duration: 45,
-      price: 35,
-      status: "confirmed",
-      worker: "Sarah Johnson",
-      paymentStatus: "paid"
-    },
-    {
-      id: "APP002",
-      date: "2024-12-20",
-      time: "10:30",
-      customer: {
-        name: "Emily Davis",
-        phone: "+1-234-567-8902",
-        email: "emily@example.com"
-      },
-      service: "Women's Haircut",
-      duration: 60,
-      price: 55,
-      status: "pending",
-      worker: "Sarah Johnson",
-      paymentStatus: "pending"
-    },
-    {
-      id: "APP003",
-      date: "2024-12-21",
-      time: "14:00",
-      customer: {
-        name: "Mike Johnson",
-        phone: "+1-234-567-8903",
-        email: "mike@example.com"
-      },
-      service: "Beard Trim",
-      duration: 30,
-      price: 25,
-      status: "confirmed",
-      worker: "Alex Rodriguez",
-      paymentStatus: "paid"
-    },
-    {
-      id: "APP004",
-      date: "2024-12-21",
-      time: "16:30",
-      customer: {
-        name: "Lisa Wilson",
-        phone: "+1-234-567-8904",
-        email: "lisa@example.com"
-      },
-      service: "Spa Treatment",
-      duration: 90,
-      price: 85,
-      status: "cancelled",
-      worker: "Maria Garcia",
-      paymentStatus: "refunded"
-    }
-  ];
+  const { appointments, updateAppointment, deleteAppointment } = useAppointments();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -115,12 +50,15 @@ const AppointmentsList = () => {
   };
 
   const filteredAppointments = appointments.filter(appointment => {
+    const serviceName = appointment.services.map(s => s.name).join(", ");
     const matchesSearch = appointment.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         appointment.service.toLowerCase().includes(searchTerm.toLowerCase());
+                         serviceName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || appointment.status === statusFilter;
+    const today = new Date().toISOString().split('T')[0];
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     const matchesDate = dateFilter === "all" || 
-                       (dateFilter === "today" && appointment.date === "2024-12-20") ||
-                       (dateFilter === "tomorrow" && appointment.date === "2024-12-21");
+                       (dateFilter === "today" && appointment.date === today) ||
+                       (dateFilter === "tomorrow" && appointment.date === tomorrow);
     
     return matchesSearch && matchesStatus && matchesDate;
   });
@@ -215,17 +153,17 @@ const AppointmentsList = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      {appointment.duration}min
+                      {appointment.totalDuration}min
                     </div>
                     <div className="flex items-center gap-1">
                       <DollarSign className="w-3 h-3" />
-                      ${appointment.price}
+                      ${appointment.totalPrice}
                     </div>
                   </div>
                   
                   <div className="text-sm">
-                    <span className="font-medium">{appointment.service}</span>
-                    <span className="text-muted-foreground"> with {appointment.worker}</span>
+                    <span className="font-medium">{appointment.services.map(s => s.name).join(", ")}</span>
+                    {appointment.worker && <span className="text-muted-foreground"> with {appointment.worker}</span>}
                   </div>
                 </div>
                 

@@ -10,11 +10,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { ArrowLeft, Clock, DollarSign, User, Phone, Mail, MessageSquare } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import ServiceSelector, { Service } from "@/components/ServiceSelector";
+import { useAppointments } from "@/contexts/AppointmentContext";
 
 const Booking = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const serviceId = searchParams.get("service");
+  const { addAppointment } = useAppointments();
   
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -67,14 +69,34 @@ const Booking = () => {
       return;
     }
 
-    // Mock booking confirmation
+    // Create the appointment
+    const newAppointment = {
+      date: selectedDate.toISOString().split('T')[0],
+      time: selectedTime,
+      customer: {
+        name: customerData.name,
+        phone: customerData.phone,
+        email: customerData.email || ""
+      },
+      services: selectedServices,
+      totalPrice,
+      totalDuration,
+      status: 'pending' as const,
+      paymentStatus: 'pending' as const,
+      notes: customerData.notes,
+      source: 'booking' as const
+    };
+
+    addAppointment(newAppointment);
+
+    // Show success message
     const serviceNames = selectedServices.map(s => s.name).join(", ");
     toast({
       title: "Booking Confirmed!",
-      description: `Your appointment for ${serviceNames} has been booked for ${selectedDate.toLocaleDateString()} at ${selectedTime}`,
+      description: `Your appointment for ${serviceNames} has been booked for ${selectedDate.toLocaleDateString()} at ${selectedTime}. You will receive a confirmation call shortly.`,
     });
 
-    // Navigate to confirmation page or home
+    // Navigate to home
     navigate("/");
   };
 

@@ -5,79 +5,17 @@ import ServiceCard from "@/components/ServiceCard";
 import { Search, Scissors, Users, Heart, Sparkles, MapPin, Phone, Mail, Star, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-// Import service images
-import mensHaircutImg from "@/assets/mens-haircut.jpg";
-import womensHaircutImg from "@/assets/womens-haircut.jpg";
-import beardServiceImg from "@/assets/beard-service.jpg";
-import spaServiceImg from "@/assets/spa-service.jpg";
-
-// Mock services data
-const services = [
-  {
-    id: "mens-haircut",
-    name: "Men's Haircut & Style", 
-    description: "Professional haircut with wash, style and beard trim. Perfect for the modern gentleman.",
-    price: 35,
-    duration: 45,
-    category: "Men",
-    image: mensHaircutImg
-  },
-  {
-    id: "womens-haircut",
-    name: "Women's Haircut & Style",
-    description: "Cut, wash, blow-dry and professional styling. Transform your look with our expert stylists.",
-    price: 55, 
-    duration: 60,
-    category: "Women",
-    image: womensHaircutImg
-  },
-  {
-    id: "beard-grooming",
-    name: "Beard Grooming & Trim",
-    description: "Expert beard shaping, trimming and grooming. Includes hot towel treatment and beard oil.",
-    price: 25,
-    duration: 30,
-    category: "Beard",
-    image: beardServiceImg
-  },
-  {
-    id: "spa-treatment", 
-    name: "Relaxing Spa Treatment",
-    description: "Rejuvenating facial treatment with deep cleansing, exfoliation and moisturizing.",
-    price: 75,
-    duration: 90,
-    category: "Spa",
-    image: spaServiceImg
-  },
-  {
-    id: "kids-haircut",
-    name: "Kids Haircut",
-    description: "Fun and gentle haircuts for children. Patient stylists who make kids feel comfortable.",
-    price: 20,
-    duration: 30,
-    category: "Kids", 
-    image: mensHaircutImg
-  },
-  {
-    id: "hair-color",
-    name: "Hair Color & Highlights",
-    description: "Full color service with consultation. Includes cut and style with your new color.",
-    price: 95,
-    duration: 120,
-    category: "Women",
-    image: womensHaircutImg
-  }
-];
+import { useServices } from "@/contexts/ServicesContext";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const navigate = useNavigate();
+  const { activeServices } = useServices();
 
   const categories = ["All", "Men", "Women", "Kids", "Beard", "Spa"];
 
-  const filteredServices = services.filter(service => {
+  const filteredServices = activeServices.filter(service => {
     const matchesSearch = service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          service.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "All" || service.category === selectedCategory;

@@ -10,9 +10,11 @@ import { Calendar } from "@/components/ui/calendar";
 import { ArrowLeft, Clock, DollarSign, User, Phone, Mail, MessageSquare, UserCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import ServiceSelector, { Service } from "@/components/ServiceSelector";
+import { useAppointments } from "@/contexts/AppointmentContext";
 
 const Appointment = () => {
   const navigate = useNavigate();
+  const { addAppointment } = useAppointments();
   
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -64,11 +66,31 @@ const Appointment = () => {
       return;
     }
 
-    // Mock appointment confirmation
+    // Create the appointment
+    const newAppointment = {
+      date: selectedDate.toISOString().split('T')[0],
+      time: selectedTime,
+      customer: {
+        name: customerData.name,
+        phone: customerData.phone,
+        email: customerData.email || ""
+      },
+      services: selectedServices,
+      totalPrice,
+      totalDuration,
+      status: 'confirmed' as const,
+      paymentStatus: 'pending' as const,
+      notes: customerData.notes,
+      source: 'appointment' as const
+    };
+
+    addAppointment(newAppointment);
+
+    // Show success message
     const serviceNames = selectedServices.map(s => s.name).join(", ");
     toast({
       title: "Appointment Scheduled!",
-      description: `Your appointment for ${serviceNames} has been scheduled for ${selectedDate.toLocaleDateString()} at ${selectedTime}`,
+      description: `Your appointment for ${serviceNames} has been scheduled for ${selectedDate.toLocaleDateString()} at ${selectedTime}. See you then!`,
     });
 
     // Navigate to home

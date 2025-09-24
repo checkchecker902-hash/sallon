@@ -2,60 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, User, Scissors, Edit, Phone } from "lucide-react";
+import { useAppointments } from "@/contexts/AppointmentContext";
 
 const TodaysSchedule = () => {
-  const todaysAppointments = [
-    {
-      id: 1,
-      time: "09:00",
-      duration: 45,
-      customer: "John Smith",
-      phone: "***-***-1234",
-      service: "Men's Haircut & Style",
-      status: "confirmed",
-      worker: "Sarah"
-    },
-    {
-      id: 2,
-      time: "10:00",
-      duration: 30,
-      customer: "Mike Johnson", 
-      phone: "***-***-5678",
-      service: "Beard Trim",
-      status: "in-progress",
-      worker: "Alex"
-    },
-    {
-      id: 3,
-      time: "11:30",
-      duration: 60,
-      customer: "Emily Davis",
-      phone: "***-***-9012",
-      service: "Women's Haircut",
-      status: "confirmed",
-      worker: "Sarah"
-    },
-    {
-      id: 4,
-      time: "14:00",
-      duration: 90,
-      customer: "Lisa Wilson",
-      phone: "***-***-3456",
-      service: "Spa Treatment",
-      status: "pending",
-      worker: "Maria"
-    },
-    {
-      id: 5,
-      time: "16:00",
-      duration: 45,
-      customer: "Robert Brown",
-      phone: "***-***-7890",
-      service: "Men's Haircut",
-      status: "confirmed",
-      worker: "Alex"
-    }
-  ];
+  const { todaysAppointments } = useAppointments();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -93,7 +43,7 @@ const TodaysSchedule = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium">{appointment.customer}</span>
+                    <span className="font-medium">{appointment.customer.name}</span>
                     <Badge 
                       className={`text-xs ${getStatusColor(appointment.status)}`}
                     >
@@ -104,16 +54,18 @@ const TodaysSchedule = () => {
                   <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Scissors className="w-3 h-3" />
-                      {appointment.service}
+                      {appointment.services.map(s => s.name).join(", ")}
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      {appointment.duration}min
+                      {appointment.totalDuration}min
                     </div>
-                    <div className="flex items-center gap-1">
-                      <User className="w-3 h-3" />
-                      {appointment.worker}
-                    </div>
+                    {appointment.worker && (
+                      <div className="flex items-center gap-1">
+                        <User className="w-3 h-3" />
+                        {appointment.worker}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
