@@ -58,21 +58,21 @@ const Index = () => {
             <div className="flex items-center justify-center gap-8 mb-8 text-white/90">
               <div className="flex items-center gap-2">
                 <div className="bg-accent/20 rounded-full p-2">
-                  <Users className="w-5 h-5 text-accent" />
-                </div>
-                <span className="text-sm font-medium">15+ Expert Stylists</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="bg-accent/20 rounded-full p-2">
                   <Heart className="w-5 h-5 text-accent" />
                 </div>
-                <span className="text-sm font-medium">5000+ Happy Clients</span>
+                <span className="text-sm font-medium">1000 Happy Clients</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="bg-accent/20 rounded-full p-2">
                   <Sparkles className="w-5 h-5 text-accent" />
                 </div>
-                <span className="text-sm font-medium">12 Years Experience</span>
+                <span className="text-sm font-medium">6 Years Experience</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="bg-accent/20 rounded-full p-2">
+                  <Users className="w-5 h-5 text-accent" />
+                </div>
+                <span className="text-sm font-medium">Licensed Professionals</span>
               </div>
             </div>
 
@@ -84,24 +84,10 @@ const Index = () => {
               Our award-winning stylists create the confidence-boosting look you deserve.
             </p>
             
-            {/* Urgency & Social Proof */}
+            {/* Booking Info */}
             <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 mb-8 max-w-2xl mx-auto">
-              <div className="flex items-center justify-center gap-8 mb-4">
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                  ))}
-                </div>
-                <div className="text-white">
-                  <p className="text-lg font-semibold">4.9/5 Rating</p>
-                  <p className="text-sm opacity-90">500+ Google Reviews</p>
-                </div>
-              </div>
-              <div className="text-accent font-medium text-lg mb-2">
-                🔥 87% of today's slots already booked!
-              </div>
-              <div className="text-white/90 text-sm">
-                ✅ 100% Satisfaction Guarantee • ✅ Same-Day Bookings Available
+              <div className="text-white/90 text-lg font-medium text-center">
+                ✅ Same-Day Bookings Available
               </div>
             </div>
             
@@ -130,12 +116,6 @@ const Index = () => {
               <span className="text-lg font-medium">Call Now: (555) 123-4567</span>
             </div>
 
-            {/* Limited Time Offer */}
-            <div className="mt-8 bg-accent/20 border border-accent/30 rounded-xl p-4 max-w-md mx-auto">
-              <div className="text-accent font-bold text-sm mb-1">⏰ LIMITED TIME OFFER</div>
-              <div className="text-white text-lg font-semibold">20% OFF First Visit</div>
-              <div className="text-white/80 text-sm">New clients only • Expires in 7 days</div>
-            </div>
           </div>
         </div>
       </section>
@@ -149,16 +129,9 @@ const Index = () => {
             <div className="flex items-center justify-center gap-8 mb-8">
               <div className="text-center">
                 <div className="bg-accent/10 rounded-full p-4 mx-auto mb-2 w-16 h-16 flex items-center justify-center">
-                  <Sparkles className="w-8 h-8 text-accent" />
-                </div>
-                <div className="text-sm font-semibold text-primary">Best Salon 2024</div>
-                <div className="text-xs text-muted-foreground">City Awards</div>
-              </div>
-              <div className="text-center">
-                <div className="bg-accent/10 rounded-full p-4 mx-auto mb-2 w-16 h-16 flex items-center justify-center">
                   <Heart className="w-8 h-8 text-accent" />
                 </div>
-                <div className="text-sm font-semibold text-primary">5000+ Happy</div>
+                <div className="text-sm font-semibold text-primary">1000+ Happy</div>
                 <div className="text-xs text-muted-foreground">Customers</div>
               </div>
               <div className="text-center">
@@ -171,15 +144,6 @@ const Index = () => {
             </div>
 
             <h3 className="text-4xl font-bold text-primary mb-4">Transformations Our Clients Love</h3>
-            <div className="flex items-center justify-center gap-2 mb-8">
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-6 h-6 fill-accent text-accent" />
-                ))}
-              </div>
-              <span className="text-3xl font-bold text-primary ml-2">4.9</span>
-              <span className="text-muted-foreground text-lg">from 500+ Google reviews</span>
-            </div>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
