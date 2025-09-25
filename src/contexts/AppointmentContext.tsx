@@ -26,6 +26,7 @@ interface AppointmentContextType {
   addAppointment: (appointment: Omit<Appointment, 'id' | 'createdAt'>) => void;
   updateAppointment: (id: string, updates: Partial<Appointment>) => void;
   deleteAppointment: (id: string) => void;
+  cancelAppointment: (id: string, cancelledBy: 'customer' | 'staff') => void;
   todaysAppointments: Appointment[];
   pendingAppointments: Appointment[];
 }
@@ -108,6 +109,16 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setAppointments(prev => prev.filter(apt => apt.id !== id));
   };
 
+  const cancelAppointment = (id: string, cancelledBy: 'customer' | 'staff') => {
+    setAppointments(prev => 
+      prev.map(apt => apt.id === id ? { 
+        ...apt, 
+        status: 'cancelled' as const,
+        notes: `Cancelled by ${cancelledBy} at ${new Date().toLocaleString()}`
+      } : apt)
+    );
+  };
+
   const todaysAppointments = appointments.filter(apt => {
     const today = new Date().toISOString().split('T')[0];
     return apt.date === today;
@@ -121,6 +132,7 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
       addAppointment,
       updateAppointment,
       deleteAppointment,
+      cancelAppointment,
       todaysAppointments,
       pendingAppointments
     }}>

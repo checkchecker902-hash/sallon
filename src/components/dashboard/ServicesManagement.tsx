@@ -23,6 +23,7 @@ import {
   Save
 } from "lucide-react";
 import { useServices } from "@/contexts/ServicesContext";
+import ServiceImageSelector from "@/components/ServiceImageSelector";
 
 const ServicesManagement = () => {
   const { 
@@ -166,6 +167,31 @@ const ServicesManagement = () => {
                       })}
                     />
                   </div>
+
+                  <div className="space-y-2">
+                    <Label>Service Image</Label>
+                    <ServiceImageSelector
+                      currentImage={editingService.image || ''}
+                      onImageSelect={(image) => setEditingService({
+                        ...editingService,
+                        image: image
+                      })}
+                    >
+                      <Button variant="outline" className="w-full justify-start">
+                        <Image className="w-4 h-4 mr-2" />
+                        {editingService.image ? 'Change Image' : 'Select Image'}
+                      </Button>
+                    </ServiceImageSelector>
+                    {editingService.image && (
+                      <div className="mt-2">
+                        <img 
+                          src={editingService.image} 
+                          alt="Service preview" 
+                          className="w-20 h-20 object-cover rounded-lg border"
+                        />
+                      </div>
+                    )}
+                  </div>
                   
                   <div className="flex items-center justify-between">
                     <Label htmlFor="service-active">Active Service</Label>
@@ -199,8 +225,16 @@ const ServicesManagement = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                    <Image className="w-6 h-6 text-muted-foreground" />
+                  <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                    {service.image ? (
+                      <img 
+                        src={service.image} 
+                        alt={service.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Image className="w-6 h-6 text-muted-foreground" />
+                    )}
                   </div>
                   
                   <div className="space-y-1">

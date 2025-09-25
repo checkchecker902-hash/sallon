@@ -19,7 +19,8 @@ import {
   Plus,
   Filter,
   Download,
-  Bell
+  Bell,
+  Crown
 } from "lucide-react";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import ScheduleViews from "@/components/dashboard/ScheduleViews";
@@ -93,6 +94,17 @@ const OwnerDashboard = () => {
               <Badge variant={isOnline ? "secondary" : "destructive"}>
                 {isOnline ? "Online" : "Offline"}
               </Badge>
+              <Button 
+                size="sm" 
+                variant="ghost"
+                onClick={() => {
+                  // Add logout functionality here when implemented
+                  window.location.href = '/staff-login';
+                }}
+              >
+                <Crown className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
             </div>
           </div>
         </div>

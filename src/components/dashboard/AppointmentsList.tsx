@@ -20,15 +20,24 @@ import {
   Mail,
   Clock,
   User,
-  DollarSign
+  DollarSign,
+  Ban
 } from "lucide-react";
 import { useAppointments } from "@/contexts/AppointmentContext";
+import AppointmentCancellation from "@/components/AppointmentCancellation";
 
 const AppointmentsList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
   const { appointments, updateAppointment, deleteAppointment } = useAppointments();
+
+  const handleCancelAppointment = (appointment: any) => {
+    setSelectedAppointment(appointment);
+    setShowCancelDialog(true);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -178,6 +187,15 @@ const AppointmentsList = () => {
                   <Button size="sm" variant="ghost">
                     <Edit className="w-4 h-4" />
                   </Button>
+                  {appointment.status !== 'cancelled' && (
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => handleCancelAppointment(appointment)}
+                    >
+                      <Ban className="w-4 h-4" />
+                    </Button>
+                  )}
                   <Button size="sm" variant="ghost">
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -194,6 +212,17 @@ const AppointmentsList = () => {
           )}
         </div>
       </CardContent>
+      
+      {/* Appointment Cancellation Dialog */}
+      <AppointmentCancellation
+        appointment={selectedAppointment}
+        isOpen={showCancelDialog}
+        onClose={() => {
+          setShowCancelDialog(false);
+          setSelectedAppointment(null);
+        }}
+        cancelledBy="staff"
+      />
     </Card>
   );
 };

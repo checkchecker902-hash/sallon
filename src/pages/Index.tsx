@@ -39,7 +39,7 @@ const Index = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate("/owner")}
+              onClick={() => navigate("/staff-login")}
               className="text-muted-foreground hover:text-primary"
             >
               Staff Login
