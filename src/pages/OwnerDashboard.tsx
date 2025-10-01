@@ -71,25 +71,25 @@ const OwnerDashboard = () => {
       {/* Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="bg-gradient-hero rounded-full w-10 h-10 flex items-center justify-center">
                 <Scissors className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-primary">Owner Dashboard</h1>
-                <p className="text-muted-foreground">Elite Salon Management</p>
+                <p className="text-muted-foreground text-sm">Elite Salon Management</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 self-end md:self-center">
               <Button 
                 size="sm" 
                 variant="outline"
                 onClick={() => setShowNotifications(true)}
               >
-                <Bell className="w-4 h-4 mr-2" />
-                Notifications
+                <Bell className="w-4 h-4" />
+                <span className="hidden md:inline ml-2">Notifications</span>
               </Button>
               <Badge variant={isOnline ? "secondary" : "destructive"}>
                 {isOnline ? "Online" : "Offline"}
@@ -103,7 +103,7 @@ const OwnerDashboard = () => {
                 }}
               >
                 <Crown className="w-4 h-4 mr-2" />
-                Logout
+                <span className="hidden md:inline">Logout</span>
               </Button>
             </div>
           </div>
@@ -111,7 +111,7 @@ const OwnerDashboard = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
           {/* Main Content */}
           <div className="lg:col-span-3 space-y-8">
@@ -121,7 +121,7 @@ const OwnerDashboard = () => {
 
             {/* Main Dashboard Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-5">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="appointments">Appointments</TabsTrigger>
                 <TabsTrigger value="services">Services</TabsTrigger>

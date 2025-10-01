@@ -18,7 +18,7 @@ const ServiceCard = ({ id, name, description, price, duration, category, image }
   const navigate = useNavigate();
 
   const handleBookNow = () => {
-    navigate(`/book?service=${id}`);
+    navigate(`/booking?service=${id}`);
   };
 
   return (

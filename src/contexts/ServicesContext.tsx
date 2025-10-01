@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Import service images
 import mensHaircutImg from "@/assets/mens-haircut.jpg";
@@ -28,69 +28,87 @@ interface ServicesContextType {
 
 const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
 
+const initialServices: ServiceData[] = [
+  {
+    id: "mens-haircut",
+    name: "Men's Haircut & Style",
+    description: "Professional haircut with wash, style and beard trim. Perfect for the modern gentleman.",
+    price: 35,
+    duration: 45,
+    category: "Men",
+    image: mensHaircutImg,
+    active: true
+  },
+  {
+    id: "womens-haircut",
+    name: "Women's Haircut & Style",
+    description: "Cut, wash, blow-dry and professional styling. Transform your look with our expert stylists.",
+    price: 55,
+    duration: 60,
+    category: "Women",
+    image: womensHaircutImg,
+    active: true
+  },
+  {
+    id: "beard-grooming",
+    name: "Beard Grooming & Trim",
+    description: "Expert beard shaping, trimming and grooming. Includes hot towel treatment and beard oil.",
+    price: 25,
+    duration: 30,
+    category: "Beard",
+    image: beardServiceImg,
+    active: true
+  },
+  {
+    id: "spa-treatment",
+    name: "Relaxing Spa Treatment",
+    description: "Rejuvenating facial treatment with deep cleansing, exfoliation and moisturizing.",
+    price: 75,
+    duration: 90,
+    category: "Spa",
+    image: spaServiceImg,
+    active: true
+  },
+  {
+    id: "kids-haircut",
+    name: "Kids Haircut",
+    description: "Fun and gentle haircuts for children. Patient stylists who make kids feel comfortable.",
+    price: 20,
+    duration: 30,
+    category: "Kids",
+    image: mensHaircutImg,
+    active: true
+  },
+  {
+    id: "hair-color",
+    name: "Hair Color & Highlights",
+    description: "Full color service with consultation. Includes cut and style with your new color.",
+    price: 95,
+    duration: 120,
+    category: "Women",
+    image: womensHaircutImg,
+    active: true
+  }
+];
+
 export const ServicesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [services, setServices] = useState<ServiceData[]>([
-    {
-      id: "mens-haircut",
-      name: "Men's Haircut & Style", 
-      description: "Professional haircut with wash, style and beard trim. Perfect for the modern gentleman.",
-      price: 35,
-      duration: 45,
-      category: "Men",
-      image: mensHaircutImg,
-      active: true
-    },
-    {
-      id: "womens-haircut",
-      name: "Women's Haircut & Style",
-      description: "Cut, wash, blow-dry and professional styling. Transform your look with our expert stylists.",
-      price: 55, 
-      duration: 60,
-      category: "Women",
-      image: womensHaircutImg,
-      active: true
-    },
-    {
-      id: "beard-grooming",
-      name: "Beard Grooming & Trim",
-      description: "Expert beard shaping, trimming and grooming. Includes hot towel treatment and beard oil.",
-      price: 25,
-      duration: 30,
-      category: "Beard",
-      image: beardServiceImg,
-      active: true
-    },
-    {
-      id: "spa-treatment", 
-      name: "Relaxing Spa Treatment",
-      description: "Rejuvenating facial treatment with deep cleansing, exfoliation and moisturizing.",
-      price: 75,
-      duration: 90,
-      category: "Spa",
-      image: spaServiceImg,
-      active: true
-    },
-    {
-      id: "kids-haircut",
-      name: "Kids Haircut",
-      description: "Fun and gentle haircuts for children. Patient stylists who make kids feel comfortable.",
-      price: 20,
-      duration: 30,
-      category: "Kids", 
-      image: mensHaircutImg,
-      active: true
-    },
-    {
-      id: "hair-color",
-      name: "Hair Color & Highlights",
-      description: "Full color service with consultation. Includes cut and style with your new color.",
-      price: 95,
-      duration: 120,
-      category: "Women",
-      image: womensHaircutImg,
-      active: true
+  const [services, setServices] = useState<ServiceData[]>(() => {
+    try {
+      const storedServices = localStorage.getItem('services');
+      return storedServices ? JSON.parse(storedServices) : initialServices;
+    } catch (error) {
+      console.error("Failed to parse services from localStorage", error);
+      return initialServices;
     }
-  ]);
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('services', JSON.stringify(services));
+    } catch (error) {
+      console.error("Failed to save services to localStorage", error);
+    }
+  }, [services]);
 
   const addService = (serviceData: Omit<ServiceData, 'id'>) => {
     const newId = serviceData.name.toLowerCase().replace(/[^a-z0-9]/g, '-');

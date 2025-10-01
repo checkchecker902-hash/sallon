@@ -3,8 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Scissors, Users, Crown } from "lucide-react";
+import { ArrowLeft, Scissors } from "lucide-react";
 import { useStaff } from '@/contexts/StaffContext';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -17,7 +16,9 @@ const StaffLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = async (userType: 'owner' | 'staff') => {
+  const handleEmailLogin = async () => {
+    // TODO: Replace with actual Firebase or other auth provider for email/password auth.
+    // This is a mock authentication for demonstration purposes.
     if (!email || !password) {
       toast({
         title: "Missing Information",
@@ -29,22 +30,15 @@ const StaffLogin = () => {
 
     setIsLoading(true);
     
-    // Simulate loading
     setTimeout(() => {
-      const success = login(email, password, userType);
+      const success = login(email, password, 'staff');
       
       if (success) {
         toast({
           title: "Login Successful",
-          description: `Welcome back!`,
+          description: "Welcome back!",
         });
-        
-        // Navigate to appropriate dashboard
-        if (userType === 'owner') {
-          navigate('/owner/dashboard');
-        } else {
-          navigate('/staff/dashboard');
-        }
+        navigate('/staff/dashboard');
       } else {
         toast({
           title: "Login Failed",
@@ -57,14 +51,19 @@ const StaffLogin = () => {
     }, 1000);
   };
 
-  const fillDemoCredentials = (userType: 'owner' | 'staff') => {
-    if (userType === 'owner') {
-      setEmail('owner@salon.com');
-      setPassword('owner123');
-    } else {
-      setEmail('sarah@salon.com');
-      setPassword('staff123');
-    }
+  const handleGoogleLogin = () => {
+    // TODO: Replace with actual Firebase or other auth provider for Google Sign-In.
+    // This is a mock authentication for demonstration purposes.
+    toast({
+      title: "Login Successful",
+      description: "Welcome back!",
+    });
+    navigate("/staff/dashboard");
+  };
+
+  const fillDemoCredentials = () => {
+    setEmail('sarah@salon.com');
+    setPassword('staff123');
   };
 
   return (
@@ -75,130 +74,86 @@ const StaffLogin = () => {
             <Scissors className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-primary">Elite Salon</h1>
-          <p className="text-muted-foreground">Staff & Owner Login Portal</p>
+          <p className="text-muted-foreground">Staff Login Portal</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-center">Welcome Back</CardTitle>
+            <CardTitle className="text-center">Staff Sign In</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="staff" className="space-y-4">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="staff" className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Staff
-                </TabsTrigger>
-                <TabsTrigger value="owner" className="flex items-center gap-2">
-                  <Crown className="w-4 h-4" />
-                  Owner
-                </TabsTrigger>
-              </TabsList>
+          <CardContent className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="staff-email">Staff Email</Label>
+                <Input
+                  id="staff-email"
+                  type="email"
+                  placeholder="Enter your staff email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
 
-              <TabsContent value="staff" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="staff-email">Staff Email</Label>
-                  <Input
-                    id="staff-email"
-                    type="email"
-                    placeholder="Enter your staff email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="staff-password">Password</Label>
-                  <Input
-                    id="staff-password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="staff-password">Password</Label>
+                <Input
+                  id="staff-password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
-                <div className="space-y-2">
-                  <Button 
-                    className="w-full"
-                    onClick={() => handleLogin('staff')}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Logging in...' : 'Login as Staff'}
-                  </Button>
-                  
-                  <Button 
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => fillDemoCredentials('staff')}
-                  >
-                    Fill Demo Credentials
-                  </Button>
-                </div>
+              <Button
+                className="w-full"
+                onClick={handleEmailLogin}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Logging in...' : 'Login with Email'}
+              </Button>
+            </div>
 
-                <div className="text-sm text-muted-foreground space-y-1">
-                  <p><strong>Demo Staff Accounts:</strong></p>
-                  <p>• sarah@salon.com / staff123</p>
-                  <p>• alex@salon.com / staff123</p>
-                  <p>• maria@salon.com / staff123</p>
-                </div>
-              </TabsContent>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
+            </div>
 
-              <TabsContent value="owner" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="owner-email">Owner Email</Label>
-                  <Input
-                    id="owner-email"
-                    type="email"
-                    placeholder="Enter owner email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="owner-password">Password</Label>
-                  <Input
-                    id="owner-password"
-                    type="password"
-                    placeholder="Enter owner password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleLogin}
+            >
+              Sign In with Google
+            </Button>
 
-                <div className="space-y-2">
-                  <Button 
-                    className="w-full"
-                    onClick={() => handleLogin('owner')}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Logging in...' : 'Login as Owner'}
-                  </Button>
-                  
-                  <Button 
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => fillDemoCredentials('owner')}
-                  >
-                    Fill Demo Credentials
-                  </Button>
-                </div>
+            <div className="space-y-2">
+              <Button
+                variant="link"
+                className="w-full"
+                onClick={fillDemoCredentials}
+              >
+                Fill Demo Credentials
+              </Button>
+              <div className="text-sm text-center text-muted-foreground space-y-1">
+                <p><strong>Demo Accounts:</strong> sarah@salon.com, alex@salon.com, maria@salon.com (pw: staff123)</p>
+              </div>
+            </div>
 
-                <div className="text-sm text-muted-foreground">
-                  <p><strong>Demo Owner Account:</strong></p>
-                  <p>owner@salon.com / owner123</p>
-                </div>
-              </TabsContent>
-            </Tabs>
-
-            <div className="text-center mt-6">
+            <div className="text-center mt-4">
               <Button 
                 variant="ghost" 
                 onClick={() => navigate('/')}
                 className="text-sm"
               >
-                ← Back to Homepage
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Homepage
               </Button>
             </div>
           </CardContent>
