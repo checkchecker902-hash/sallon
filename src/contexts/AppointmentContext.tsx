@@ -23,7 +23,7 @@ export interface Appointment {
 
 interface AppointmentContextType {
   appointments: Appointment[];
-  addAppointment: (appointment: Omit<Appointment, 'id' | 'createdAt'>) => void;
+  addAppointment: (appointment: Omit<Appointment, 'id' | 'createdAt'>) => Appointment;
   updateAppointment: (id: string, updates: Partial<Appointment>) => void;
   deleteAppointment: (id: string) => void;
   cancelAppointment: (id: string, cancelledBy: 'customer' | 'staff') => void;
@@ -33,70 +33,96 @@ interface AppointmentContextType {
 
 const AppointmentContext = createContext<AppointmentContextType | undefined>(undefined);
 
-export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    // Sample data - replace with real data in production
-    {
-      id: "APP001",
-      date: new Date().toISOString().split('T')[0],
-      time: "09:00",
-      customer: {
-        name: "John Smith",
-        phone: "+1-234-567-8901",
-        email: "john@example.com"
-      },
-      services: [{
-        id: "mens-haircut",
-        name: "Men's Haircut & Style",
-        description: "Professional haircut with styling",
-        price: 35,
-        duration: 45,
-        category: "Men",
-        image: "/src/assets/mens-haircut.jpg"
-      }],
-      totalPrice: 35,
-      totalDuration: 45,
-      status: "confirmed",
-      worker: "Sarah Johnson",
-      paymentStatus: "paid",
-      createdAt: new Date().toISOString(),
-      source: "booking"
+const initialAppointments: Appointment[] = [
+  // Sample data - replace with real data in production
+  {
+    id: "APP001",
+    date: new Date().toISOString().split('T')[0],
+    time: "09:00",
+    customer: {
+      name: "John Smith",
+      phone: "+1-234-567-8901",
+      email: "john@example.com"
     },
-    {
-      id: "APP002",
-      date: new Date().toISOString().split('T')[0],
-      time: "10:30",
-      customer: {
-        name: "Emily Davis",
-        phone: "+1-234-567-8902",
-        email: "emily@example.com"
-      },
-      services: [{
-        id: "womens-haircut",
-        name: "Women's Haircut & Style",
-        description: "Cut, wash, blow-dry and professional styling",
-        price: 55,
-        duration: 60,
-        category: "Women",
-        image: "/src/assets/womens-haircut.jpg"
-      }],
-      totalPrice: 55,
-      totalDuration: 60,
-      status: "pending",
-      worker: "Sarah Johnson",
-      paymentStatus: "pending",
-      createdAt: new Date().toISOString(),
-      source: "appointment"
-    }
-  ]);
+    services: [{
+      id: "mens-haircut",
+      name: "Men's Haircut & Style",
+      description: "Professional haircut with styling",
+      price: 35,
+      duration: 45,
+      category: "Men",
+      image: "/src/assets/mens-haircut.jpg"
+    }],
+    totalPrice: 35,
+    totalDuration: 45,
+    status: "confirmed",
+    worker: "Sarah Johnson",
+    paymentStatus: "paid",
+    createdAt: new Date().toISOString(),
+    source: "booking"
+  },
+  {
+    id: "APP002",
+    date: new Date().toISOString().split('T')[0],
+    time: "10:30",
+    customer: {
+      name: "Emily Davis",
+      phone: "+1-234-567-8902",
+      email: "emily@example.com"
+    },
+    services: [{
+      id: "womens-haircut",
+      name: "Women's Haircut & Style",
+      description: "Cut, wash, blow-dry and professional styling",
+      price: 55,
+      duration: 60,
+      category: "Women",
+      image: "/src/assets/womens-haircut.jpg"
+    }],
+    totalPrice: 55,
+    totalDuration: 60,
+    status: "pending",
+    worker: "Sarah Johnson",
+    paymentStatus: "pending",
+    createdAt: new Date().toISOString(),
+    source: "appointment"
+  }
+];
 
-  const addAppointment = (appointmentData: Omit<Appointment, 'id' | 'createdAt'>) => {
+export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [appointments, setAppointments] = useState<Appointment[]>(() => {
+    try {
+      const storedAppointments = localStorage.getItem('appointments');
+      return storedAppointments ? JSON.parse(storedAppointments) : initialAppointments;
+    } catch (error) {
+      console.error("Failed to parse appointments from localStorage", error);
+      return initialAppointments;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('appointments', JSON.stringify(appointments));
+    } catch (error) {
+      console.error("Failed to save appointments to localStorage", error);
+    }
+  }, [appointments]);
+
+  const generateBookingId = () => {
+    const prefix = "BK";
+    const timestamp = Date.now().toString(36).slice(-4).toUpperCase();
+    const randomPart = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return `${prefix}${timestamp}${randomPart}`;
+  };
+
+  const addAppointment = (appointmentData: Omit<Appointment, 'id' | 'createdAt'>): Appointment => {
     const newAppointment: Appointment = {
       ...appointmentData,
-      id: `APP${String(appointments.length + 1).padStart(3, '0')}`,
+      id: generateBookingId(),
       createdAt: new Date().toISOString()
     };
     setAppointments(prev => [...prev, newAppointment]);
+    return newAppointment;
   };
 
   const updateAppointment = (id: string, updates: Partial<Appointment>) => {

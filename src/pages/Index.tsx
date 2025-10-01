@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import ServiceCard from "@/components/ServiceCard";
+import CancelBooking from "@/components/CancelBooking";
 import { Search, Scissors, Users, Heart, Sparkles, MapPin, Phone, Mail, Star, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -36,14 +37,7 @@ const Index = () => {
               <h1 className="text-2xl font-bold text-primary">Elite Salon</h1>
             </div>
             
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => navigate("/staff-login")}
-              className="text-muted-foreground hover:text-primary"
-            >
-              Staff Login
-            </Button>
+            <div></div>
           </div>
         </div>
       </header>
@@ -96,7 +90,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="bg-accent text-white hover:bg-accent/90 shadow-glow text-lg px-12 py-6 rounded-full font-semibold transform hover:scale-105 transition-all duration-200"
-                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => navigate("/booking")}
               >
                 <Sparkles className="w-5 h-5 mr-2" />
                 Book Your Transformation
@@ -105,7 +99,7 @@ const Index = () => {
                 size="lg" 
                 variant="outline"
                 className="bg-white/10 text-white border-white/20 hover:bg-white/20 text-lg px-12 py-6 rounded-full font-semibold transform hover:scale-105 transition-all duration-200"
-                onClick={() => navigate("/appointment")}
+                onClick={() => navigate("/booking")}
               >
                 <UserCheck className="w-5 h-5 mr-2" />
                 Schedule Appointment
@@ -249,6 +243,13 @@ const Index = () => {
         </div>
       </section>
 
+
+      {/* Cancellation Section */}
+      <section id="cancel" className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <CancelBooking />
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-12">

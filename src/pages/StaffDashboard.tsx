@@ -73,18 +73,18 @@ const StaffDashboard = () => {
       {/* Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="bg-gradient-hero rounded-full w-10 h-10 flex items-center justify-center">
                 <Scissors className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-primary">Staff Dashboard</h1>
-                <p className="text-muted-foreground">Welcome back, {authState.user?.name}</p>
+                <p className="text-muted-foreground text-sm">Welcome back, {authState.user?.name}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 self-end md:self-center">
               <Badge variant="secondary">
                 {authState.user?.role}
               </Badge>
@@ -93,8 +93,8 @@ const StaffDashboard = () => {
                 variant="outline"
                 onClick={handleLogout}
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
+                <LogOut className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Logout</span>
               </Button>
             </div>
           </div>
@@ -102,7 +102,7 @@ const StaffDashboard = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
           {/* Main Content */}
           <div className="lg:col-span-3 space-y-8">
@@ -144,7 +144,7 @@ const StaffDashboard = () => {
 
             {/* Main Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3">
                 <TabsTrigger value="appointments">Today's Schedule</TabsTrigger>
                 <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
                 <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -171,9 +171,9 @@ const StaffDashboard = () => {
                             key={appointment.id}
                             className="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
                           >
-                            <div className="flex items-center justify-between">
+                            <div className="flex flex-col md:flex-row items-start justify-between gap-4">
                               <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
+                                <div className="flex items-center gap-3 mb-2 flex-wrap">
                                   <h3 className="font-medium">{appointment.customer.name}</h3>
                                   <Badge variant={
                                     appointment.status === 'completed' ? 'default' :
@@ -184,11 +184,11 @@ const StaffDashboard = () => {
                                   </Badge>
                                 </div>
                                 
-                                <div className="grid sm:grid-cols-2 gap-2 text-sm text-muted-foreground mb-3">
-                                  <div>Time: {appointment.time}</div>
-                                  <div>Duration: {appointment.totalDuration}min</div>
-                                  <div>Services: {appointment.services.map(s => s.name).join(', ')}</div>
-                                  <div>Total: ${appointment.totalPrice}</div>
+                                <div className="grid sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-muted-foreground mb-3">
+                                  <div>Time: <span className="font-semibold text-foreground">{appointment.time}</span></div>
+                                  <div>Duration: <span className="font-semibold text-foreground">{appointment.totalDuration}min</span></div>
+                                  <div className="sm:col-span-2">Services: <span className="font-semibold text-foreground">{appointment.services.map(s => s.name).join(', ')}</span></div>
+                                  <div>Total: <span className="font-semibold text-foreground">${appointment.totalPrice}</span></div>
                                 </div>
                                 
                                 {appointment.customer.phone && (
@@ -198,11 +198,12 @@ const StaffDashboard = () => {
                                 )}
                               </div>
                               
-                              <div className="flex items-center gap-2">
+                              <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-stretch gap-2 w-full md:w-auto">
                                 {appointment.status === 'confirmed' && (
                                   <Button 
                                     size="sm"
                                     onClick={() => handleStatusUpdate(appointment.id, 'in-progress')}
+                                    className="flex-1"
                                   >
                                     <UserCheck className="w-4 h-4 mr-2" />
                                     Start Service
@@ -213,6 +214,7 @@ const StaffDashboard = () => {
                                   <Button 
                                     size="sm"
                                     onClick={() => handleStatusUpdate(appointment.id, 'completed')}
+                                    className="flex-1"
                                   >
                                     <CheckCircle className="w-4 h-4 mr-2" />
                                     Complete
@@ -224,6 +226,7 @@ const StaffDashboard = () => {
                                     size="sm" 
                                     variant="destructive"
                                     onClick={() => handleCancelAppointment(appointment)}
+                                    className="flex-1"
                                   >
                                     <XCircle className="w-4 h-4 mr-2" />
                                     Cancel
@@ -260,17 +263,17 @@ const StaffDashboard = () => {
                             key={appointment.id}
                             className="border rounded-lg p-4"
                           >
-                            <div className="flex items-center justify-between">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                               <div className="flex-1">
                                 <h3 className="font-medium mb-1">{appointment.customer.name}</h3>
-                                <div className="grid sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
-                                  <div>Date: {new Date(appointment.date).toLocaleDateString()}</div>
-                                  <div>Time: {appointment.time}</div>
-                                  <div>Services: {appointment.services.map(s => s.name).join(', ')}</div>
-                                  <div>Total: ${appointment.totalPrice}</div>
+                                <div className="grid sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                                  <div>Date: <span className="font-semibold text-foreground">{new Date(appointment.date).toLocaleDateString()}</span></div>
+                                  <div>Time: <span className="font-semibold text-foreground">{appointment.time}</span></div>
+                                  <div className="sm:col-span-2">Services: <span className="font-semibold text-foreground">{appointment.services.map(s => s.name).join(', ')}</span></div>
+                                  <div>Total: <span className="font-semibold text-foreground">${appointment.totalPrice}</span></div>
                                 </div>
                               </div>
-                              <Badge variant="outline">
+                              <Badge variant="outline" className="mt-2 sm:mt-0">
                                 {appointment.status}
                               </Badge>
                             </div>
